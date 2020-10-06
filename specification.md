@@ -39,3 +39,7 @@ With every message there is a header sent with it. This header consists of four 
 Status code 0 means that a generic error occurred. The body is always empty on error.
 ### 1 - Success
 Status code 1 means that the request was successful. A body is supplied. 
+### 3 - Not implemented
+Staus code 3 means that the requested type is not implemented on the server.
+All server implementations should return this on all types that they have not yet implemented. Body is empty.
+
