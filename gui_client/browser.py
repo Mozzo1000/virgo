@@ -8,6 +8,7 @@ import traceback
 import socket
 from urllib import parse
 from message import ClientMessage
+from gui_client.ui.error_page import general_error
 
 sel = selectors.DefaultSelector()
 
@@ -129,6 +130,8 @@ class BrowserWindow(QWidget):
                         message.process_events(mask)
                         self.textcontent.setText(message.accepted_message)
                         self.parent.tab_widget.setTabText(self.parent.tab_widget.currentIndex(), url.netloc + url.path)
+                    except ConnectionRefusedError:
+                        self.textcontent.setHtml(general_error)
                     except Exception:
                         print(
                             "main: error: exception for",
