@@ -43,3 +43,15 @@ Status code 1 means that the request was successful. A body is supplied.
 Staus code 3 means that the requested type is not implemented on the server.
 All server implementations should return this on all types that they have not yet implemented. Body is empty.
 
+
+## Client
+### About page
+A client should always return a local about page for the url `virgo://about`  
+This page should show relevant information about the client and it is up to the creator of the client to decide what is relevant for this page. 
+Except for the following information that is required to be shown on the about page,
+* Client name and version
+* Supported virgo protocol version
+* Link to virgo repository
+
+A client can open up a separate window with this information when a user goes the about url but it can also be displayed as a local website.
+ 
