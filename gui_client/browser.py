@@ -121,7 +121,10 @@ class BrowserWindow(QWidget):
             port = 1784
 
             request = self.create_request('aquire', path, 'None')
-            self.start_connection(host, port, request)
+            try:
+                self.start_connection(host, port, request)
+            except socket.gaierror:
+                self.textcontent.setHtml(general_error)
             while True:
                 events = sel.select(timeout=1)
                 for key, mask in events:
