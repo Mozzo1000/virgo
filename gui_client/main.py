@@ -45,7 +45,9 @@ class Browser(QMainWindow):
         new_tab_action.setShortcut('Ctrl+N')
         new_tab_action.triggered.connect(self.new_browser_window)
 
-        self.close_tab_shortcut = QShortcut(QKeySequence("Ctrl+W"), self, self.close_tab)
+        close_current_tab_action = QAction('&Close current tab', self)
+        close_current_tab_action.setShortcut('Ctrl+W')
+        close_current_tab_action.triggered.connect(self.close_tab)
 
         find_all_action = QAction('Find all', self)
         find_all_action.setShortcut('Ctrl+F')
@@ -57,6 +59,7 @@ class Browser(QMainWindow):
         menubar = self.menuBar()
         file_menu = menubar.addMenu('&File')
         file_menu.addAction(new_tab_action)
+        file_menu.addAction(close_current_tab_action)
         file_menu.addAction(exit_action)
 
         edit_menu = menubar.addMenu('&Edit')
