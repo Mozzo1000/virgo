@@ -29,10 +29,16 @@ A `post` message is sending information to the server for further processing on 
 
 ### Header
 With every message there is a header sent with it. This header consists of four parts:
-* Byteorder -
-* Content type - 
-* Content encoding - 
-* Content length -
+* Byteorder
+* Content type
+* Content encoding
+* Content length
+
+#### Content type
+The content type returned is the type of which content is inside the message body. This is not the content type of the
+message itself. 
+Content type should be compliant with the MIME type specification.
+
 
 ## Status codes
 ### 0 - Fail
