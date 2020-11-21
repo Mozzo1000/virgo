@@ -17,6 +17,8 @@ class BrowserWindow(QWidget):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        self.host = None
+        self.port = None
 
         self.layout = QGridLayout(self)
 
@@ -84,6 +86,13 @@ class BrowserWindow(QWidget):
             cursor.mergeCharFormat(text_format)
         self.textcontent.textCursor().endEditBlock()
 
+    def set_active_host(self, host, port):
+        self.host = host
+        self.port = port
+
+    def get_active_host(self):
+        return self.host, self.port
+
     def open_link(self, url):
         self.textbox.setText(url.geturl())
         print(url)
@@ -119,6 +128,7 @@ class BrowserWindow(QWidget):
             host = url.netloc
             path = url.path
             port = 1784
+            self.set_active_host(host, port)
 
             request = self.create_request('aquire', path, 'None')
             try:
