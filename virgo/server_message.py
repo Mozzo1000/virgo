@@ -2,6 +2,7 @@ import sys
 import selectors
 import struct
 import os
+import mimetypes
 from virgo.core.transport import set_selector_events_mask, read_socket, write_socket,\
     json_encode, json_decode, close_socket
 
@@ -18,6 +19,7 @@ class ServerMessage:
         self.jsonheader = None
         self.request = None
         self.response_created = False
+        mimetypes.add_type('text/markdown', '.md')
 
     def close(self):
         close_socket(self)
@@ -38,6 +40,7 @@ class ServerMessage:
 
     def _create_response_json_content(self):
         action = self.request.get("type")
+        content_type = "text/plain"
         if action == "aquire":
             file_content = self.request.get("file")
             print("FILE CONTENT: " + file_content)
@@ -49,6 +52,7 @@ class ServerMessage:
             if os.path.isfile(os.path.join(self.dir, file_content)):
                 read_file = open(os.path.join(self.dir, file_content))
                 content = {"status": 1, "body": read_file.read()}
+                content_type = mimetypes.guess_type(os.path.join(self.dir, file_content))[0]
                 read_file.close()
             else:
                 content = {"status": 0, "body": ""}
@@ -57,7 +61,7 @@ class ServerMessage:
         content_encoding = "utf-8"
         response = {
             "content_bytes": json_encode(content, content_encoding),
-            "content_type": "text/json",
+            "content_type": content_type,
             "content_encoding": content_encoding,
         }
         return response
