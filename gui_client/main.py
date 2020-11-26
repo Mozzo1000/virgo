@@ -6,6 +6,7 @@ from PyQt5.Qt import QApplication, qApp
 
 from ui.find import Find
 from browser import BrowserWindow
+from ui.index import Index
 
 
 class Browser(QMainWindow):
@@ -49,6 +50,9 @@ class Browser(QMainWindow):
         close_current_tab_action.setShortcut('Ctrl+W')
         close_current_tab_action.triggered.connect(self.close_tab)
 
+        get_index_action = QAction('&Retrieve index', self)
+        get_index_action.triggered.connect(self.get_index_window)
+
         find_all_action = QAction('Find all', self)
         find_all_action.setShortcut('Ctrl+F')
         find_all_action.triggered.connect(self.find_all_window)
@@ -60,6 +64,7 @@ class Browser(QMainWindow):
         file_menu = menubar.addMenu('&File')
         file_menu.addAction(new_tab_action)
         file_menu.addAction(close_current_tab_action)
+        file_menu.addAction(get_index_action)
         file_menu.addAction(exit_action)
 
         edit_menu = menubar.addMenu('&Edit')
@@ -69,6 +74,10 @@ class Browser(QMainWindow):
         bookmark_menu.addAction(bookmark_manager_action)
 
         self.show()
+
+    def get_index_window(self):
+        index = Index(self)
+        index.show()
 
     def find_all_window(self):
         find_all = Find(self.current_browser_window)
