@@ -8,7 +8,7 @@ from virgo.core.transport import set_selector_events_mask, read_socket, write_so
 
 
 class ServerMessage:
-    def __init__(self, selector, sock, addr, dir):
+    def __init__(self, selector, sock, addr, dir, sitemap):
         self.selector = selector
         self.sock = sock
         self.addr = addr
@@ -19,6 +19,7 @@ class ServerMessage:
         self.jsonheader = None
         self.request = None
         self.response_created = False
+        self.site = sitemap
         mimetypes.add_type('text/markdown', '.md')
 
     def close(self):
@@ -41,7 +42,10 @@ class ServerMessage:
     def _create_response_json_content(self):
         action = self.request.get("type")
         content_type = "text/plain"
-        if action == "aquire":
+        if action == 'index':
+            content_type = "application/json"
+            content = {"status": 1, "body": self.site.get_sitemap()}
+        elif action == "aquire":
             file_content = self.request.get("file")
             print("FILE CONTENT: " + file_content)
             if not file_content:
