@@ -14,28 +14,21 @@ class Browser(QMainWindow):
         super().__init__()
         self.resize(800, 600)
         self.setWindowTitle('Virgo Browser')
-        self.central_widget = QWidget(self)
-
-        self.horizontal_layout = QHBoxLayout(self.central_widget)
-        self.horizontal_layout.setSizeConstraint(QLayout.SetMaximumSize)
-        self.splitter = QSplitter(self.central_widget)
 
         self.browser_windows = []
 
-        self.tab_widget = QTabWidget(self.central_widget)
+        self.tab_widget = QTabWidget()
         self.tab_widget.setTabShape(QTabWidget.Rounded)
         self.tab_widget.setTabsClosable(True)
+        self.tab_widget.setDocumentMode(True)
         self.tab_widget.currentChanged.connect(self.change_browser_window)
         self.tab_widget.tabCloseRequested.connect(self.remove_browser_window)
         self.new_browser_window()
 
+        self.setCentralWidget(self.tab_widget)
+
         # Open about page on launch
         self.current_browser_window.open_link(parse.urlparse('virgo://about'))
-
-        self.splitter.addWidget(self.tab_widget)
-        self.horizontal_layout.addWidget(self.splitter)
-
-        self.setCentralWidget(self.central_widget)
 
         exit_action = QAction(QIcon('exit.png'), ' &Exit', self)
         exit_action.setShortcut('Ctrl+Q')
