@@ -4,7 +4,7 @@ import socket
 import json
 from urllib import parse
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QVBoxLayout, QLineEdit, QPushButton, QTextEdit, \
-    QTableWidget, QTableWidgetItem, QAbstractItemView, QHeaderView
+    QTableWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QMessageBox
 from PyQt5.QtCore import QUrl
 from message import ClientMessage
 
@@ -34,6 +34,12 @@ class Index(QMainWindow):
         request = self.create_request('index', '', '')
         try:
             self.start_connection(self.host, self.port, request)
+        except TypeError:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText('Unable to load index page')
+            msg.setWindowTitle('Index - Error')
+            msg.exec_()
         except socket.gaierror:
             print('error')
         while True:
