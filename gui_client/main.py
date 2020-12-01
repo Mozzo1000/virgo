@@ -90,6 +90,10 @@ class Browser(QMainWindow):
         if index < len(self.browser_windows):
             del self.browser_windows[index]
 
+        if self.tab_widget.count() < 1:
+            self.new_browser_window('')
+            self.current_browser_window.open_link(parse.urlparse('virgo://about'))
+
     def change_browser_window(self, index):
         if index < len(self.browser_windows):
             self.current_browser_window = self.browser_windows[index]
