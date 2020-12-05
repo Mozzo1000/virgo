@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QLayout, QLineEdit, QPushButton, QTextEdit, QSplitter, \
-    QVBoxLayout, QTabWidget, QAction, QGridLayout, QTextBrowser
+    QVBoxLayout, QTabWidget, QAction, QGridLayout, QTextBrowser, QStackedLayout
 from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QBrush, QColor
 from PyQt5.QtCore import Qt, QUrl
 import sys
@@ -19,26 +19,16 @@ class BrowserWindow(QWidget):
         self.parent = parent
         self.host = None
         self.port = None
+        self.url = None
 
-        self.layout = QGridLayout(self)
-
-        self.textbox = QLineEdit(self)
-        self.textbox.setText('virgo://')
-        self.textbox.resize(280, 40)
-        self.textbox.returnPressed.connect(self.on_click_go)
-
-        self.gobutton = QPushButton('Go', self)
-        self.gobutton.clicked.connect(self.on_click_go)
+        self.layout = QStackedLayout(self)
 
         self.textcontent = QTextBrowser(self)
         self.textcontent.setTextInteractionFlags(Qt.LinksAccessibleByMouse)
         self.textcontent.setOpenLinks(False)
         self.textcontent.anchorClicked.connect(self.go_to)
 
-        self.layout.addWidget(self.textbox, 0, 0)
-        self.layout.addWidget(self.gobutton, 0, 1)
-        self.layout.addWidget(self.textcontent, 1, 0)
-
+        self.layout.addWidget(self.textcontent)
         self.setLayout(self.layout)
 
     def go_to(self, url):
@@ -94,8 +84,9 @@ class BrowserWindow(QWidget):
         return self.host, self.port
 
     def open_link(self, url):
-        self.textbox.setText(url.geturl())
+        self.parent.toolbar.set_addressbar_text(url.geturl())
         print(url)
+        self.url = url
         if url.netloc == 'about':
             about_page = """
                 <style>

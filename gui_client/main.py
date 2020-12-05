@@ -1,32 +1,43 @@
 import sys
 from urllib import parse
-from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QLayout, QSplitter, QTabWidget, QAction, QShortcut
-from PyQt5.QtGui import QIcon, QKeySequence
+from PyQt5.QtWidgets import QMainWindow, QWidget, QTabWidget, QAction, QVBoxLayout
+from PyQt5.QtGui import QIcon
 from PyQt5.Qt import QApplication, qApp
 
 from ui.find import Find
 from browser import BrowserWindow
 from ui.index import Index
+from toolbar import Toolbar
 
 
 class Browser(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.resize(800, 600)
         self.setWindowTitle('Virgo Browser')
 
+        self.window = QWidget()
+        self.window.resize(800, 700)
+
         self.browser_windows = []
+
+        self.layout = QVBoxLayout()
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
 
         self.tab_widget = QTabWidget()
         self.tab_widget.setTabShape(QTabWidget.Rounded)
         self.tab_widget.setTabsClosable(True)
         self.tab_widget.setDocumentMode(True)
+        self.tab_widget.setMovable(True)
         self.tab_widget.currentChanged.connect(self.change_browser_window)
         self.tab_widget.tabCloseRequested.connect(self.remove_browser_window)
+
+        self.toolbar = Toolbar(self)
+
+        self.layout.addWidget(self.tab_widget)
+        self.layout.addWidget(self.toolbar)
+
         self.new_browser_window()
-
-        self.setCentralWidget(self.tab_widget)
-
         # Open about page on launch
         self.current_browser_window.open_link(parse.urlparse('virgo://about'))
 
@@ -66,7 +77,10 @@ class Browser(QMainWindow):
         bookmark_menu = menubar.addMenu("&Bookmarks")
         bookmark_menu.addAction(bookmark_manager_action)
 
-        self.show()
+        self.layout.addWidget(menubar)
+
+        self.window.setLayout(self.layout)
+        self.window.show()
 
     def get_index_window(self):
         index = Index(self)
@@ -97,6 +111,8 @@ class Browser(QMainWindow):
     def change_browser_window(self, index):
         if index < len(self.browser_windows):
             self.current_browser_window = self.browser_windows[index]
+            if self.current_browser_window.url:
+                self.toolbar.set_addressbar_text(self.current_browser_window.url.geturl())
 
     def new_browser_window(self, title="New tab"):
         # For some reason, when creating a new tab it returns False..
@@ -107,7 +123,9 @@ class Browser(QMainWindow):
         browser_window = self.create_browser_window()
         self.browser_windows.append(browser_window)
         self.tab_widget.addTab(browser_window, title)
+        self.toolbar.set_addressbar_text('virgo://')
         self.tab_widget.setCurrentWidget(browser_window)
+
 
 if __name__ == '__main__':
     print("Starting virgo browser..")
