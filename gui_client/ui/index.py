@@ -76,7 +76,7 @@ class Index(QMainWindow):
 
     def clicked_item(self, index):
         if index.column() == 0:
-            link = QUrl('virgo://' + self.domain + index.data())
+            link = QUrl('virgo://' + self.domain + "/" + index.data())
             self.parent.current_browser_window.go_to(link)
 
     def create_request(self, type, file, metadata):
